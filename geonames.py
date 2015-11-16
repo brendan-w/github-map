@@ -4,6 +4,9 @@ from urllib.parse import urlencode
 import requests
 
 
+# Note: you will need to export the GEONAMES_USERNAME var from your shell
+
+
 GEONAMES_API_URL = "http://api.geonames.org/search"
 GEONAMES_PARAMS = {
     "username": os.getenv("GEONAMES_USERNAME", ""),

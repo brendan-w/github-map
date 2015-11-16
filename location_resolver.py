@@ -1,5 +1,6 @@
 
 import os
+import geonames
 from github import Github
 
 
@@ -20,15 +21,21 @@ class Location_Resolver:
         self.gh = Github(os.getenv("GITHUB_MAP_USERNAME", ""), \
                          os.getenv("GITHUB_MAP_PASSWORD", ""))
 
+
     def __call__(self, username):
         if username not in self.cache:
             self.cache[username] = self.lookup(username)
 
         return self.cache[username]
 
+
     def lookup(self, username):
         user = self.gh.get_user(username)
-        location_str = user.location
+
+        if not user.location:
+            return None
+
+        return geonames.get_lat_lng(user.location)
 
 
 
