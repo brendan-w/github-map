@@ -5,6 +5,53 @@ from github import Github
 from urllib.parse import urlencode
 
 
+
+class Location:
+    def __init__(self, geonames_data):
+        """
+            Loads all dictionary keys into same-named attributes
+
+            Example input:
+
+            {
+                'population': 583776,
+                'toponymName': 'Portland',
+                'lng': '-122.67621',
+                'countryName': 'United States',
+                'fcode': 'PPLA2',
+                'geonameId': 5746545,
+                'adminName1': 'Oregon',
+                'countryCode': 'US',
+                'fcl': 'P',
+                'fclName': 'city, village,...',
+                'name': 'Portland',
+                'fcodeName': 'seat of a second-order administrative division',
+                'countryId': '6252001',
+                'lat': '45.52345',
+                'adminCode1': 'OR'
+            }
+        """
+
+        # pull out the interesting bits
+        # TODO: safe dict lookups
+        self.raw = geonames_data
+        self.lat = float(geonames_data["lat"])
+        self.lng = float(geonames_data["lng"])
+        self.name = str(geonames_data["name"])
+        self.countryName = str(geonames_data["countryName"])
+        self.countryCode = str(geonames_data["countryCode"])
+
+    def __str__(self):
+        return "%s %s" % (self.name, self.countryCode)
+
+    def __eq__(self, other):
+        return isinstance(other, Location) and (hash(self) == hash(other))
+
+    def __hash__(self):
+        return hash( (self.lat, self.lng) )
+
+
+
 class Location_Resolver:
     """
         Class for converting GitHub usernames into Lat/Long's
@@ -86,7 +133,8 @@ class Location_Resolver:
 
         try:
             r = requests.get(url)
-            return r.json()["geonames"][0]
+            data = r.json()["geonames"][0]
+            return Location(data) # emit a new Location object
         except:
             return None
 

@@ -12,6 +12,8 @@ def repo_stats(repo_path):
     repo = gh.get_repo(repo_path)
     stats = repo.get_stats_contributors()
 
+    unknown_users = 0
+    unknown_commits = 0
     commits_by_location = {}
 
     # stats will be a list of StatsContributor objects
@@ -19,12 +21,19 @@ def repo_stats(repo_path):
 
         # there are cases where a contributor can't be found anymore
         if contributor.author:
-            print(contributor.author.name, contributor.author.location)
+            username = contributor.author.login
+            location_str = contributor.author.location
+            # print(username, location_str)
+            # in this case, we already have the location string
+            location = lr(contributor.author.login, contributor.author.location)
+            commits_by_location[location] = commits_by_location.get(location, 0) + contributor.total
         else:
-            print("unknown person")
+            unknown_users += 1
+            unknown_commits += contributor.total
 
-        print(contributor.total)
-
+    # debug
+    for location, commits in commits_by_location.items():
+        print(str(location), commits)
 
 
 if __name__ == "__main__":
