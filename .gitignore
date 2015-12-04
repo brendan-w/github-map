@@ -1,3 +1,7 @@
+
+# my script that puts passwords in env vars
+env.sh
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
