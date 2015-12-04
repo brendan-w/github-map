@@ -134,7 +134,8 @@ class Location_Resolver:
         try:
             r = requests.get(url)
             data = r.json()["geonames"][0]
-            return Location(data) # emit a new Location object
+            # return Location(data) # emit a new Location object
+            return data # emit raw JSON dict
         except:
             return None
 
