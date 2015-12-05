@@ -1,4 +1,7 @@
 
+# don't commit the mountain of data
+data/
+
 # my script that puts passwords in env vars
 env.sh
 

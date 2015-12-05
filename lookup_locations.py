@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 
 import os
 import sys
@@ -27,7 +28,7 @@ def lookup_locations(stats_file, store_file):
     # get ready to look up locations
     lr = Location_Resolver()
 
-    for stat in stats[:3]:
+    for stat in stats:
         username = stat["author"]["login"]
         if username not in store:
             print("looking up: %s" % username)
@@ -37,7 +38,7 @@ def lookup_locations(stats_file, store_file):
 
     # done, write the new store file
     with open(store_file, "w") as f:
-        f.write(json.dumps(store))
+        f.write(json.dumps(store, indent=4))
 
 
 
