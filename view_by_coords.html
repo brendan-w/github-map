@@ -33,7 +33,7 @@
             $("svg").attr("height", $(window).height() - 20 + "px");
 
 
-            var PROJECT = "linux";
+            var PROJECT = window.location.hash.slice(1);
 
 
             var svg = d3.select("svg");
