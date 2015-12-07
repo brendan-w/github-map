@@ -27,15 +27,17 @@
     </head>
     <body>
         <svg></svg>
-        <input type="range" min="0" max="2000" step="1" onchange="render(this.value);" />
+        <input type="range" value="0" min="0" max="2000" step="1" onchange="render(this.value);" />
         <script>
             //make the SVG fullscreen
             $("svg").attr("width", $(window).width() - 20 + "px");
             $("svg").attr("height", $(window).height() - 120 + "px");
 
 
-            var PROJECT = "linux";
-            var WEEK = 220;
+            var PROJECT = "qgis";
+
+
+
 
             var svg = d3.select("svg");
 
@@ -72,7 +74,7 @@
                   .attr("d", path);
 
               //initial draw
-              render(WEEK);
+              render(0);
 
             });
             });
