@@ -33,6 +33,9 @@
             $("svg").attr("height", $(window).height() - 20 + "px");
 
 
+            var PROJECT = "qgis";
+
+
 
             var svg = d3.select("svg");
 
@@ -43,7 +46,7 @@
 
             var color_scale = d3.scale.sqrt().domain([0, 1]).range(["white", "#44D"]);
 
-            d3.json("data/qgis.countries.json", function(error, collection) {
+            d3.json("data/" + PROJECT + ".countries.json", function(error, collection) {
                 if (error) throw error;
 
                 svg.append("g")
