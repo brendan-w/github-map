@@ -37,7 +37,9 @@ def lookup_locations(stats_file, location_file, output_file):
             name = stat["author"]["login"]
 
             # add up the number of commits per country
-            if locations[name] and (locations[name]["countryCode"] == country_code):
+            if locations[name] and \
+               "countryCode" in locations[name] and \
+               (locations[name]["countryCode"] == country_code):
                 country["properties"]["commits"] += stat["total"]
 
         if country["properties"]["commits"] > max_commits:
