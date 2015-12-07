@@ -41,7 +41,7 @@
 
             var path = d3.geo.path().projection(projection);
 
-            var color_scale = d3.scale.linear().domain([0, 1]).range(["white", "#44D"]);
+            var color_scale = d3.scale.sqrt().domain([0, 1]).range(["white", "#44D"]);
 
             // d3.json("js/us-counties.json", function(error, collection) {
             d3.json("data/linux.countries.json", function(error, collection) {
