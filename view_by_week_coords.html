@@ -1,0 +1,122 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META -->
+        <meta charset='utf-8'/>
+        <meta name="viewport" content="width=device-width">
+        <meta name="author" content="">
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+
+        <title>Commits by Coordinates</title>
+
+        <!-- CSS -->
+        <style>
+            body { margin:0px; }
+            .countries
+            {
+                fill: white;
+                stroke: #888;
+                stroke-linejoin: round;
+            }
+        </style>
+
+        <!-- JS -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+        <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    </head>
+    <body>
+        <svg></svg>
+        <input type="range" min="0" max="2000" step="1" onchange="render(this.value);" />
+        <script>
+            //make the SVG fullscreen
+            $("svg").attr("width", $(window).width() - 20 + "px");
+            $("svg").attr("height", $(window).height() - 120 + "px");
+
+
+            var PROJECT = "linux";
+            var WEEK = 220;
+
+            var svg = d3.select("svg");
+
+            var projection = d3.geo.mercator();
+            // var projection = d3.geo.albersUsa();
+
+            var path = d3.geo.path().projection(projection);
+
+            var color_scale = d3.scale.sqrt().domain([0, 1]).range(["white", "#44D"]);
+
+            var stats, locations;
+
+            //fetch all of the fiels
+            d3.json("countries.json", function(error, map) {
+                if (error) throw error;
+            d3.json("data/" + PROJECT + ".stats.json", function(error, _stats) {
+                if (error) throw error;
+                stats = _stats;
+
+                //set the max weeks of the scrollbar
+                $("input").attr("max", stats[0].weeks.length)
+                          .css("width", $(window).width() - 30);
+
+            d3.json("data/" + PROJECT + ".locations.json", function(error, _locations) {
+                if (error) throw error;
+                locations = _locations;
+
+                //the base map
+                svg.append("g")
+                  .attr("class", "countries")
+                .selectAll("path")
+                  .data(map.features)
+                .enter().append("path")
+                  .attr("d", path);
+
+              //initial draw
+              render(WEEK);
+
+            });
+            });
+            });
+
+            function render(week_num) {
+
+                //remove the old ones
+                $(".pins").remove();
+
+                //the data
+                svg.append("g")
+                  .attr("class", "pins")
+                .selectAll(".pin")
+                  .data(stats)
+                  .enter().append("circle", ".pin")
+                  .attr("r", 5)
+                  .attr("transform", function(d) {
+                    var loc = locations[d.author.login];
+                    if(loc)
+                    {
+                        return "translate(" + projection([
+                          parseFloat(loc.lng),
+                          parseFloat(loc.lat)
+                        ]) + ")";
+                    }
+                    else
+                    {
+                        return "";
+                    }
+                  })
+                  .style("fill", "#44D")
+                  .style("opacity", function(d) {
+                    var w = d.weeks[week_num];
+                    if(w)
+                    {
+                        if(w.c > 0)
+                            return "0.5";
+                        else
+                            return "0";
+                    }
+                    return "0";
+                  });
+            }
+        </script>
+    </body>
+</html>
