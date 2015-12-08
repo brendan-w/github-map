@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+    <head>
+        <!-- META -->
+        <meta charset='utf-8'/>
+        <meta name="viewport" content="width=device-width">
+        <meta name="author" content="">
+        <meta name="description" content="">
+        <meta name="keywords" content="">
+
+        <title>Commits by States</title>
+
+        <!-- CSS -->
+        <style>
+            body { margin:0px; }
+            .states
+            {
+                fill: white;
+                stroke: black;
+                stroke-linejoin: round;
+            }
+        </style>
+
+        <!-- JS -->
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+        <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+    </head>
+    <body>
+        <svg></svg>
+        <script>
+            //make the SVG fullscreen
+            $("svg").attr("width", $(window).width() - 20 + "px");
+            $("svg").attr("height", $(window).height() - 20 + "px");
+
+
+            var PROJECT = window.location.hash.slice(1);
+
+
+
+            var svg = d3.select("svg");
+
+            // var projection = d3.geo.mercator();
+            var projection = d3.geo.albersUsa();
+
+            var path = d3.geo.path().projection(projection);
+
+            var color_scale = d3.scale.sqrt().domain([0, 1]).range(["white", "#44D"]);
+
+            d3.json("data/" + PROJECT + ".states.json", function(error, collection) {
+                if (error) throw error;
+
+                svg.append("g")
+                  .attr("class", "states")
+                .selectAll("path")
+                  .data(collection.features)
+                .enter().append("path")
+                  .attr("d", path)
+                  .style("fill", function(d) { return color_scale(d.properties.commits); });
+            });
+        </script>
+    </body>
+</html>
